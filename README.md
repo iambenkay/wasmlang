@@ -11,4 +11,4 @@ The grammar for the language set is defined in `ast/grammar.pest`. I am using Pa
 An AST is created from the token stream. This AST is optimized by a simple algorithm; if the value of the two children of a binary operation can be derived at compile time then execute the binary tree at compile time and return the resultant node. This saves time spent in running unnecessary instructions at runtime. Then using the ABI, this AST is compiled down to WASM byte code.
 
 ## Where to find what?
-The source code for the parser, optimizer and ABI implementation is on `src/parser.rs`. There are some helper functions in `src/functions.rs` that help create abstractions over the webassembly implementations. A sample script showing an example of a working program written using the defined grammar is stored in `source/index.wasl`.
+The source code for the parser, optimizer and ABI implementation is in `src/parser.rs`. There are some helper functions in `src/functions.rs` that help create abstractions over the WebAssembly constructs. A sample script showing an example of a working program written using the defined grammar is stored in `source/index.wasl`.
