@@ -1,0 +1,79 @@
+Program = _{ SOI ~ wsln* ~ (FunctionExpr ~ wsln*)* ~ FunctionExpr? ~ EOI }
+
+ws = _{ " " | "\t" }
+wsln = _{ ws | NEWLINE }
+COMMENT = _{ "/*" ~ (!"*/" ~ ANY)* ~ "*/" | "//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE+ }
+
+
+ArgumentExpr = { ArgumentType ~ ws+ ~ ArgumentName ~ ws* }
+
+ArgumentName = @{ Identifier }
+ArgumentType = @{ Type }
+
+FunctionExpr = {
+	"func " ~ ws* ~ (ReturnType ~ ws+)? ~ FunctionName ~ ws* ~ "(" ~ wsln* ~ (ArgumentExpr ~ "," ~ wsln*)*
+    ~ (ArgumentExpr ~ ","* ~ wsln*)? ~ ")" ~ ws* ~ "{" ~ wsln* ~ (Stmt ~ wsln*)* ~ "}"
+}
+
+Stmt = _{ AssignmentExpr | ForExpr | ReturnExpr | StandaloneExpr }
+
+FunctionName = @{ Identifier }
+
+StandaloneExpr = { Expr ~ ws* ~ ";" }
+ReturnExpr = { "return" ~ (ws+ ~ Expr ~ ws*)? ~ ";" }
+
+Identifier = @{ ASCII_ALPHA ~ (ASCII_ALPHANUMERIC | "_")* }
+
+GenericExpr = { (Identifier ~ "<" ~ ws* ~ Identifier ~ ws* ~ ">") }
+
+Type = @{ Identifier }
+
+ReturnType = @{ Type }
+
+AssignmentExpr = { Type ~ ws+ ~ AssignmentVariable ~ ws* ~ "=" ~ ws* ~ Expr ~ ws* ~ ";" }
+
+AssignmentVariable = @{ Identifier }
+
+NumberExpr = _{ Float | Integer }
+
+Integer = @{ ASCII_DIGIT+ }
+
+Expr = _{ ArithmeticExpr }
+
+Float = @{ ASCII_DIGIT* ~ "." ~ ASCII_DIGIT+ }
+
+ArithmeticExpr = _{ AddExpr }
+
+ForExpr = {
+	"for" ~ ws* ~ "(" ~ ws* ~ InExpr
+     ~ ws* ~ ")" ~ ws* ~ "{" ~ wsln* ~ (Stmt ~ wsln*)* ~ "}"
+}
+
+InExpr = { Type  ~ ws+ 
+    ~ Identifier  ~ ws+ ~ "in"  ~ ws+ ~ Identifier }
+
+AddOp = { "+" | "-" }
+MulOp = { "*" | "/" }
+
+AddExpr = {
+	MulExpr ~ ws* ~ AddOp ~ ws* ~ AddExpr
+    | MulExpr
+}
+
+ArrayExpr = { "[" ~ wsln* ~ (ArithmeticExpr ~ ws* ~ "," ~ wsln*)* 
+  ~ (ArithmeticExpr ~ ws* ~ ","* ~ wsln*)* ~ "]" }
+
+UnitExpr = {
+	"(" ~ ws* ~ ArithmeticExpr ~ ws* ~ ")"
+    | UnaryExpr
+    | Identifier
+    | NumberExpr
+    | ArrayExpr
+}
+
+UnaryExpr = { AddOp ~ ws* ~ UnitExpr }
+
+MulExpr = { 
+  UnitExpr ~ ws* ~ MulOp ~ ws* ~ MulExpr 
+  | UnitExpr
+}

@@ -1,0 +1,17 @@
+/* Benjamin */
+// Benjamin
+
+func Float main(
+   Int first,
+   Int second,
+) {
+   // Int sh = first + second; // Benjamin
+    Float sh =/* Benjamin */ 42.5;
+   // Float sh = .5;
+   // sh + 1;
+   // Float sh = 5.5 * 4;
+   // Int sh = (5 + 4) - (7 - 2);
+   // Float sh = 5.5 * 4 * 6.0;
+   // Float sh = 5 / (6 * 6.0);
+   return sh;
+}
